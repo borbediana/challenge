@@ -1,6 +1,5 @@
-#from smtplib import SMTP
-# Import smtplib for the actual sending function
 import smtplib
+import subprocess
 from smtplib import SMTPException
 from smtplib import SMTP
 
@@ -16,6 +15,9 @@ password = p['password']
 receiver = ['b.antohidiana@gmail.com']
 host = p['smtp.server']
 port = p['smtp.port']
+
+print "Call build.sh"
+subprocess.call(['./build.sh'])
 
 
 def sendEmail(host, port, sender, password):
