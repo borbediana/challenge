@@ -1,0 +1,10 @@
+FROM openjdk:8-jre-slim
+
+ENV NONROOT_USER=diana
+ENV CLASSPATH=/workspace
+
+RUN useradd ${NONROOT_USER}
+USER ${NONROOT_USER}
+COPY ./HelloWorld.class /workspace/
+
+CMD ["java", "HelloWorld"]

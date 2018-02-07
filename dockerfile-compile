@@ -1,0 +1,11 @@
+FROM openjdk:8-jdk-slim
+
+ENV NONROOT_USER=diana
+
+RUN useradd ${NONROOT_USER}
+COPY ./HelloWorld.java /workspace/
+RUN javac /workspace/HelloWorld.java
+
+CMD ["/bin/bash"]
+
+
