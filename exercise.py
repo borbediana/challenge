@@ -22,7 +22,7 @@ print changes
 if "modified:" in changes:
 	print "Changes exist, we will commit them for you!"
 	subprocess.call(["git","add", "."])
-	subprocess.call(["git","commit", "-m", "\"This is an automated commit\""])
+	subprocess.call(["git","commit", "-m", "This is an automated commit"])
 	subprocess.call(["git","push"])
 
 
