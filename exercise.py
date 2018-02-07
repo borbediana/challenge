@@ -2,10 +2,9 @@ import smtplib
 import subprocess
 from smtplib import SMTPException
 from smtplib import SMTP
-
-# Import the email modules we'll need
 from email.mime.text import MIMEText
 from pyjavaproperties import Properties
+
 p = Properties()
 p.load(open('configuration.properties'))
 
@@ -15,6 +14,17 @@ password = p['password']
 receiver = ['b.antohidiana@gmail.com']
 host = p['smtp.server']
 port = p['smtp.port']
+
+print "Check to see changes in files"
+changes = subprocess.check_output(["git", "status"])
+print changes
+
+if "modified:" in changes:
+	print "Changes exist, we will commit them for you!"
+	subprocess.call(["git","add", "."])
+	subprocess.call(["git","commit", "-m", "\"This is an automated commit\""])
+	subprocess.call(["git","push"])
+
 
 print "Call build.sh"
 subprocess.call(['./build.sh'])
