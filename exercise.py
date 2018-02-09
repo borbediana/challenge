@@ -15,6 +15,13 @@ receiver = ['b.antohidiana@gmail.com']
 host = p['smtp.server']
 port = p['smtp.port']
 
+source_repo=p['source.repo']
+binary_repo=p['binary.repo']
+
+print "Clone sources repository to check for updates"
+changes = subprocess.check_output(["git", "clone", source_repo, "../workspace/sources"])
+
+
 print "Check to see changes in files"
 changes = subprocess.check_output(["git", "status"])
 print changes
@@ -22,7 +29,7 @@ print changes
 if "modified:" in changes:
 	print "Changes exist, we will commit them for you!"
 	subprocess.call(["git","add", "."])
-	subprocess.call(["git","commit", "-m", "This is an automated commit"])
+	subprocess.call(["git","commit", "-m", "This is an automated commit!"])
 	subprocess.call(["git","push"])
 
 
