@@ -17,9 +17,13 @@ port = p['smtp.port']
 
 source_repo=p['source.repo']
 binary_repo=p['binary.repo']
+workspace_dir=p['workspace.directory']
 
 print "Clone sources repository to check for updates"
-changes = subprocess.check_output(["git", "clone", source_repo, "../workspace/sources"])
+#changes = subprocess.check_output(["git", "clone", source_repo, workspace_dir + "/sources"])
+
+print "Remove source repository from local"
+changes = subprocess.check_output(["rm", "-rf", source_repo, workspace_dir + "/sources"])
 
 
 print "Check to see changes in files"
