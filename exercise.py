@@ -26,7 +26,7 @@ def sendEmail(host, port, sender, password):
 	To: To Person <to@todomain.com>
 	Subject: SMTP e-mail test
 
-	This is a test e-mail message.
+	Build failed! Please check your sources!
 	"""
 	print message
 	try:
