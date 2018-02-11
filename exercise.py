@@ -43,6 +43,19 @@ source_repo_dir="source_repo"
 binary_repo_dir="binary_repo"
 
 
+# checking repositories
+if source_repo:
+	print "Checking repository"
+else:
+	print "No source repository specified. Exiting script!"
+	quit()
+
+if binary_repo:
+	print "Checking binary repository"
+else:
+	print "No binary repository specified. Exiting script!"
+	quit()
+
 # Check log file of script execution
 scriptFilePath = os.getcwd() + "/execution.log"
 
@@ -64,18 +77,15 @@ else:
 if os.path.isdir(workspace_dir):
 	print "Workspace exists ",workspace_dir
 else:
-	print "Workspace directory doesn't exist. Creating workspace!"
-	os.mkdir(workspace_dir)
-	print workspace_dir
+	if workspace_dir != "":
+		print "Workspace directory doesn't exist. Creating workspace!"
+		os.mkdir(workspace_dir)
+	else:
+		print "No workspace directory specified. Exiting script!"
+		quit()
+
 
 os.chdir(workspace_dir)
-
-# checking source repository
-if source_repo:
-	print "Checking repository"
-else:
-	print "No source repository specified. Exiting script!"
-	subprocess.call(["exit","1"])
 
 if os.path.isdir(source_repo_dir):
 	print "Local repository already exists. Updating repository"
@@ -108,12 +118,6 @@ else:
 # if build is successfull, then copy the binary from source repo to binary repo and commit
 if result == 0:
 	# checking binary repository
-	if binary_repo:
-		print "Checking binary repository"
-	else:
-		print "No binary repository specified. Exiting script!"
-		quit()
-
 	os.chdir(workspace_dir)
 
 	if os.path.isdir(binary_repo_dir):
