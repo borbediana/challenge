@@ -24,7 +24,16 @@ if [ -z "$ERROR" ]
 fi
 
 docker run --name runner-container --detach -t runner
-docker cp runner-container:/workspace/HelloWorld.class ./
+
+if [ -d $1/target ]
+   then
+	echo "Target foldet exists! Cleaning it!"
+	rm -rf $1/target
+fi
+
+mkdir $1/target
+
+docker cp runner-container:/workspace/HelloWorld.class $1/target/
 docker stop runner-container
 
 #docker build . -f dockerfile-app -t app

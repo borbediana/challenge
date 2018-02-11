@@ -6,25 +6,11 @@ from email.mime.text import MIMEText
 from pyjavaproperties import Properties
 import os
 
-p = Properties()
-p.load(open('configuration.properties'))
-
-# load connection data from configuration file
-sender = p['username']
-password = p['password']
-receiver = ['b.antohidiana@gmail.com']
-host = p['smtp.server']
-port = p['smtp.port']
-source_repo=p['source.repo']
-binary_repo=p['binary.repo']
-workspace_dir=p['workspace.directory']
-
-
 def sendEmail(host, port, sender, password):
 
-	message = """From: From Person <from@fromdomain.com>
-	To: To Person <to@todomain.com>
-	Subject: SMTP e-mail test
+	message = """From: sender
+	To: sender
+	Subject: Build failed!
 
 	Build failed! Please check your sources!
 	"""
@@ -38,6 +24,24 @@ def sendEmail(host, port, sender, password):
 		print "Successfully sent email!"
 	except SMTPException:
 		print "Error: unable to send email!"
+
+
+p = Properties()
+p.load(open('configuration.properties'))
+
+# load connection data from configuration file
+sender = p['username']
+password = p['password']
+receiver = ['b.antohidiana@gmail.com']
+host = p['smtp.server']
+port = p['smtp.port']
+source_repo=p['source.repo']
+binary_repo=p['binary.repo']
+workspace_dir=p['workspace.directory']
+
+source_repo_dir="source_repo"
+binary_repo_dir="binary_repo"
+
 
 # Check log file of script execution
 scriptFilePath = os.getcwd() + "/execution.log"
@@ -56,12 +60,12 @@ else:
 	print "File ",buildFilePath," is missing. Aborting build execution!"
 	quit()
 
-# checking local workspace
+# Checking local workspace
 if os.path.isdir(workspace_dir):
 	print "Workspace exists ",workspace_dir
 else:
-	print "Workspace invalid"
-	workspace_dir="~"
+	print "Workspace directory doesn't exist. Creating workspace!"
+	os.mkdir(workspace_dir)
 	print workspace_dir
 
 os.chdir(workspace_dir)
@@ -73,14 +77,14 @@ else:
 	print "No source repository specified. Exiting script!"
 	subprocess.call(["exit","1"])
 
-if os.path.isdir("sources"):
+if os.path.isdir(source_repo_dir):
 	print "Local repository already exists. Updating repository"
-	os.chdir("sources")
+	os.chdir(source_repo_dir)
 	subprocess.call(["git","pull"])
 else:
 	print "Creating local repository"
-	subprocess.call(["git","clone", source_repo])
-	os.chdir("sources")
+	subprocess.call(["git","clone", source_repo, source_repo_dir])
+	os.chdir(source_repo_dir)
 
 # last commit hash
 lastCommit = subprocess.check_output(["git","rev-parse", "HEAD"])
@@ -97,7 +101,7 @@ if lastCommit == lastLineFromLog:
 	quit()
 else:
 	print "New commit found. Running build on commit",lastCommit
-	sources_dir = workspace_dir + "/sources/"
+	sources_dir = workspace_dir + "/" + source_repo_dir + "/"
 	result = subprocess.call([buildFilePath, sources_dir])
 
 
@@ -112,17 +116,17 @@ if result == 0:
 
 	os.chdir(workspace_dir)
 
-	if os.path.isdir("binary_repo"):
+	if os.path.isdir(binary_repo_dir):
 		print "Local binary repository already exists. Updating repository"
-		os.chdir("binary_repo")
+		os.chdir(binary_repo_dir)
 		subprocess.call(["git","pull"])
 	else:
 		print "Creating local binary repository"
-		subprocess.call(["git","clone", binary_repo])
-		os.chdir("binary_repo")
+		subprocess.call(["git","clone", binary_repo, binary_repo_dir])
+		os.chdir(binary_repo_dir)
 
-	sources_dir_target = workspace_dir + "/sources/target/."
-	binaries_dir = workspace_dir + "/binary_repo/"
+	sources_dir_target = workspace_dir + "/" + source_repo_dir +"/target/."
+	binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
 	subprocess.call(["cp", "-r", sources_dir_target, binaries_dir])
 	os.chdir(binaries_dir)
 	print "Check if we have changes!"
