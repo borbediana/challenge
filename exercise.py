@@ -6,14 +6,14 @@ from email.mime.text import MIMEText
 from pyjavaproperties import Properties
 import os
 
-def sendEmail(host, port, sender, password):
+def sendEmail(host, port, sender, password, msj):
 
 	message = """From: sender
 	To: sender
 	Subject: Build failed!
 
 	Build failed! Please check your sources!
-	"""
+	""" + msj
 	print message
 	try:
 		server = smtplib.SMTP(host, port)
@@ -170,5 +170,7 @@ if result == 0:
     		file.write(lastCommit)
 else:
 	print "Build failed! Sending email to notice people!"
-	sendEmail(host, port, sender, password)
+	f = open("error_file","r")
+	error_message = f.read()
+	sendEmail(host, port, sender, password, error_message)
 
