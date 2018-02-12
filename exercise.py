@@ -45,16 +45,16 @@ binary_repo_dir="binary_repo"
 
 # checking repositories
 if source_repo:
-	print "Checking repository"
+	print "Checking source repository"
 else:
-	print "No source repository specified. Exiting script!"
-	quit()
+	print "Using current directory as source repository!"
+	source_repo_dir = os.getcwd();
 
 if binary_repo:
 	print "Checking binary repository"
 else:
-	print "No binary repository specified. Exiting script!"
-	quit()
+	print "Using current directory as binary repository!"
+	binary_repo_dir = os.getcwd();
 
 # Check log file of script execution
 scriptFilePath = os.getcwd() + "/execution.log"
@@ -81,9 +81,13 @@ else:
 		print "Workspace directory doesn't exist. Creating workspace!"
 		os.mkdir(workspace_dir)
 	else:
-		print "No workspace directory specified. Exiting script!"
-		quit()
+		print "No workspace directory specified."
+		# quit()
 
+# use local folder as workspace
+if source_repo_dir == binary_repo_dir and source_repo_dir == os.getcwd():
+	workspace_dir = os.getcwd()
+	print "Workspace: ",workspace_dir
 
 os.chdir(workspace_dir)
 
@@ -111,7 +115,10 @@ if lastCommit == lastLineFromLog:
 	quit()
 else:
 	print "New commit found. Running build on commit",lastCommit
-	sources_dir = workspace_dir + "/" + source_repo_dir + "/"
+	if workspace_dir == source_repo_dir:
+		sources_dir = workspace_dir
+	else:
+		sources_dir = workspace_dir + "/" + source_repo_dir + "/"
 	result = subprocess.call([buildFilePath, sources_dir])
 
 
@@ -129,8 +136,13 @@ if result == 0:
 		subprocess.call(["git","clone", binary_repo, binary_repo_dir])
 		os.chdir(binary_repo_dir)
 
-	sources_dir_target = workspace_dir + "/" + source_repo_dir +"/target/."
-	binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
+	sources_dir_target = sources_dir +"/target/."
+
+	if workspace_dir == binary_repo_dir:
+		binaries_dir = workspace_dir
+	else:
+		binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
+	#binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
 	subprocess.call(["cp", "-r", sources_dir_target, binaries_dir])
 	os.chdir(binaries_dir)
 	print "Check if we have changes!"
