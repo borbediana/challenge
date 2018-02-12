@@ -37,7 +37,7 @@ This repository contains:
 	- creates workspace
 	- clones/updates source repository
 	- clones/updates binary repository
-	- runs build.sh from source repository
+	- runs build.sh from source repository - it runs the build based on last commit
 	- if build is successful, then commits the result of the build on the binary repository
 	- if the build fails, it sends email
 
