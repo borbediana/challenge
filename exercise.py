@@ -119,6 +119,10 @@ else:
 		sources_dir = workspace_dir
 	else:
 		sources_dir = workspace_dir + "/" + source_repo_dir + "/"
+	
+	print "sources_dir: ",sources_dir
+	print "source_repo_dir: ",source_repo_dir
+	print "workspace_dir: ",workspace_dir
 	result = subprocess.call([buildFilePath, sources_dir])
 
 
@@ -142,7 +146,7 @@ if result == 0:
 		binaries_dir = workspace_dir
 	else:
 		binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
-	#binaries_dir = workspace_dir + "/" + binary_repo_dir + "/"
+
 	subprocess.call(["cp", "-r", sources_dir_target, binaries_dir])
 	os.chdir(binaries_dir)
 	print "Check if we have changes!"
