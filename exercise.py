@@ -78,8 +78,6 @@ else:
 		#quit()
 
 # Build.sh file
-print "source_repo_dir: ",source_repo_dir
-
 if workspace_dir == os.getcwd():
 	buildFilePath = workspace_dir + "/build.sh"
 else:

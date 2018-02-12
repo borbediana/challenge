@@ -2,8 +2,8 @@
 
 pyjavaproperties.py file is dowloaded from https://bitbucket.org/jnoller/pyjavaproperties/downloads/ 
 
-Prerequisites:
+# Prerequisites:
 
-Python: 2.7
-Git: 2.11
-
+ - Python: 2.7
+ - Git: 2.11
+ - Docker: 18.01-ce
