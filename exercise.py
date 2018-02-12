@@ -65,14 +65,6 @@ else:
 	print "File ",scriptFilePath," doesn't  exists. Creating it!"
 	open(scriptFilePath,"w+")
 
-# Build.sh file
-buildFilePath = os.getcwd() + "/build.sh"
-if os.path.isfile(buildFilePath):
-	print "File ",buildFilePath," exists"
-else:
-	print "File ",buildFilePath," is missing. Aborting build execution!"
-	quit()
-
 # Checking local workspace
 if os.path.isdir(workspace_dir):
 	print "Workspace exists ",workspace_dir
@@ -81,8 +73,25 @@ else:
 		print "Workspace directory doesn't exist. Creating workspace!"
 		os.mkdir(workspace_dir)
 	else:
-		print "No workspace directory specified."
-		# quit()
+		print "No workspace directory specified. Using current directory!"
+		workspace_dir = os.getcwd()
+		#quit()
+
+# Build.sh file
+print "source_repo_dir: ",source_repo_dir
+
+if workspace_dir == os.getcwd():
+	buildFilePath = workspace_dir + "/build.sh"
+else:
+	buildFilePath = workspace_dir + "/" + source_repo_dir + "/build.sh"
+
+# Check build file exists
+if os.path.isfile(buildFilePath):
+	print "File ",buildFilePath," exists"
+else:
+	print "File ",buildFilePath," is missing. Aborting build execution!"
+	quit()
+
 
 # use local folder as workspace
 if source_repo_dir == binary_repo_dir and source_repo_dir == os.getcwd():
