@@ -4,16 +4,21 @@ from smtplib import SMTPException
 from smtplib import SMTP
 from email.mime.text import MIMEText
 from pyjavaproperties import Properties
+import string
 import os
 
 def sendEmail(host, port, sender, password, msj, files_changed):
 
-	message = """From: sender
-	To: sender
-	Subject: Build failed!
+	SUBJECT = "Build failed!"
+	message = string.join((
+		"From: %s" % sender,
+		"To: %s" % sender,
+		"Subject: %s" % SUBJECT ,
+		"",
+		msj,
+		files_changed
+		), "\r\n")
 
-	Build failed! Please check your sources!
-	""" + msj + files_changed
 	print message
 	try:
 		server = smtplib.SMTP(host, port)
