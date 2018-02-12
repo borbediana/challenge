@@ -6,14 +6,14 @@ from email.mime.text import MIMEText
 from pyjavaproperties import Properties
 import os
 
-def sendEmail(host, port, sender, password, msj):
+def sendEmail(host, port, sender, password, msj, files_changed):
 
 	message = """From: sender
 	To: sender
 	Subject: Build failed!
 
 	Build failed! Please check your sources!
-	""" + msj
+	""" + msj + files_changed
 	print message
 	try:
 		server = smtplib.SMTP(host, port)
@@ -130,6 +130,7 @@ else:
 	print "sources_dir: ",sources_dir
 	print "source_repo_dir: ",source_repo_dir
 	print "workspace_dir: ",workspace_dir
+	files_changed = subprocess.check_output(["git", "show"])
 	result = subprocess.call([buildFilePath, sources_dir])
 
 
@@ -172,5 +173,5 @@ else:
 	print "Build failed! Sending email to notice people!"
 	f = open("error_file","r")
 	error_message = f.read()
-	sendEmail(host, port, sender, password, error_message)
+	sendEmail(host, port, sender, password, error_message, files_changed)
 
